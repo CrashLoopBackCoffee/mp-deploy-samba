@@ -1,0 +1,44 @@
+#cloud-config
+users:
+  - default
+  - name: "{{ username }}"
+    groups:
+      - sudo
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - "{{ ssh_public_key }}"
+    lock_passwd: true
+    sudo: ALL=(ALL) NOPASSWD:ALL
+device_aliases:
+  data: /dev/vdb
+disk_setup:
+  data:
+    table_type: gpt
+    layout: true
+    overwrite: false
+fs_setup:
+  - label: data
+    filesystem: ext4
+    device: data
+mounts:
+  - [data, {{ data_disk_mount }}]
+runcmd:
+  # system update and prep:
+  - hostnamectl set-hostname {{ name }}
+  - apt-get update -y
+  - apt-get upgrade -y
+  - DEBIAN_FRONTEND=noninteractive apt-get install -y
+    apt-transport-https
+    ca-certificates
+    curl
+    gpg
+    net-tools
+    vim
+
+  # samba installation:
+
+  # start guest agent last to keep Pulumi waiting until all of the above is ready:
+  - DEBIAN_FRONTEND=noninteractive apt-get install -y qemu-guest-agent
+  - systemctl enable qemu-guest-agent
+  - systemctl start qemu-guest-agent
+  - echo "done" > /tmp/cloud-config.done

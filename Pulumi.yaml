@@ -1,0 +1,9 @@
+name: samba
+description: Samba server VM
+pulumi:disable-default-providers:
+  - proxmoxve
+runtime:
+  name: python
+  options:
+    toolchain: uv
+    virtualenv: .venv

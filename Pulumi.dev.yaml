@@ -1,0 +1,18 @@
+config:
+  samba:config:
+    proxmox:
+      node-name: pve
+      api-endpoint: https://pve-01.mpagel.de:8006
+      api-token:
+        envvar: PROXMOX_API_TOKEN__PVE_01__PULUMI
+    vm:
+      name: samba
+      vmid: 1003
+      vlan-id: 10
+      ipv4-address: 10.0.10.2/24
+      cores: 2
+      memory_mb_min: 2048
+      memory_mb_max: 4096
+      root_disk_size_gb: 10
+      data_disk_size_gb: 2
+      ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIThrWKIoEj20S3DosaiKBRUGA89qe1xz9hch2+VhSGd mpagel@k8s-dev
