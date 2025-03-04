@@ -6,7 +6,7 @@ config:
       api-token:
         envvar: PROXMOX_API_TOKEN__PVE_01__PULUMI
     vm:
-      name: samba
+      name: samba-dev
       vmid: 1003
       vlan-id: 10
       ipv4-address: 10.0.10.2/24

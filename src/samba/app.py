@@ -1,10 +1,15 @@
+import os
 import pathlib
 
 import jinja2
 import pulumi as p
 import pulumi_proxmoxve as proxmoxve
 
+from mp.deploy_utils import unify
+
 from samba.model import ComponentConfig
+
+# TODO Refactor this VM logic into utility function.
 
 
 def create_server(component_config: ComponentConfig, proxmox_provider: proxmoxve.Provider):
@@ -134,3 +139,22 @@ def create_server(component_config: ComponentConfig, proxmox_provider: proxmoxve
             p.ResourceOptions(ignore_changes=['cdrom']),
         ),
     )
+
+    vm_ipv4 = vm.ipv4_addresses[1][0]
+    p.export('ipv4', vm_ipv4)
+
+    # create DNS entries for master nodes:
+    dns_provider = unify.UnifyDnsRecordProvider(
+        base_url=str(component_config.unify.url),
+        api_token=os.environ['UNIFY_API_TOKEN__PULUMI'],  # noqa: F821
+        verify_ssl=component_config.unify.verify_ssl,
+    )
+
+    dns_record = unify.UnifyDnsRecord(
+        'dns',
+        domain_name=f'{component_config.vm.name}.{component_config.unify.internal_domain}',
+        ipv4=vm_ipv4,
+        provider=dns_provider,
+    )
+
+    p.export('fqdn', dns_record.domain_name)
