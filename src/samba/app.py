@@ -51,6 +51,10 @@ def create_server(component_config: ComponentConfig, proxmox_provider: proxmoxve
         ),
     )
 
+    p.export('smb-share', component_config.smb.share)
+    p.export('smb-username', component_config.smb.username)
+    p.export('smb-password', component_config.smb.password)
+
     gateway_address = str(component_config.vm.ipv4_address.network.network_address + 1)
 
     vlan_config: proxmoxve.vm.VirtualMachineNetworkDeviceArgsDict = (

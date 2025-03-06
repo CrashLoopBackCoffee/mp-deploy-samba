@@ -1,7 +1,5 @@
 #cloud-config
-
-# ---- INIT modules ----
-
+hostname: "{{ vm.name }}"
 users:
   - default
   - name: "{{ vm.ssh_user }}"
@@ -60,22 +58,6 @@ write_files:
       browseable = yes
       guest ok = no
       valid users = @{{ smb.username }}
-hostname: "{{ vm.name }}"
-
-# ---- CONFIG modules ----
-
-# creates script at config time but runs it in final stage:
-runcmd:
-  - mkdir -p {{ vm.data_disk_mount }}/{{ smb.share }}
-  - printf "{{ smb.password }}\n{{ smb.password }}\n" | smbpasswd -a -s {{ smb.username }}
-  - setfacl -R -m "u:{{ smb.username }}:rwx" {{ vm.data_disk_mount }}/{{ smb.share }}
-  - ufw allow samba
-  - systemctl restart smbd
-  - systemctl enable qemu-guest-agent
-  - systemctl start qemu-guest-agent
-
-# ---- FINAL MODULES ----
-
 package_upgrade: true
 packages:
   - apt-transport-https
@@ -87,3 +69,11 @@ packages:
   - vim
   - samba
   - qemu-guest-agent
+runcmd:
+  - mkdir -p {{ vm.data_disk_mount }}/{{ smb.share }}
+  - printf "{{ smb.password }}\n{{ smb.password }}\n" | smbpasswd -a -s {{ smb.username }}
+  - setfacl -R -m "u:{{ smb.username }}:rwx" {{ vm.data_disk_mount }}/{{ smb.share }}
+  - ufw allow samba
+  - systemctl restart smbd
+  - systemctl enable qemu-guest-agent
+  - systemctl start qemu-guest-agent
