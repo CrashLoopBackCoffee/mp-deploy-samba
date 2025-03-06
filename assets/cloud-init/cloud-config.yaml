@@ -67,9 +67,10 @@ hostname: "{{ vm.name }}"
 # creates script at config time but runs it in final stage:
 runcmd:
   - mkdir -p {{ vm.data_disk_mount }}/{{ smb.share }}
-  - echo ----------------------------------------- service started
   - printf "{{ smb.password }}\n{{ smb.password }}\n" | smbpasswd -a -s {{ smb.username }}
-  - echo ----------------------------------------- smb password changed
+  - setfacl -R -m "u:{{ smb.username }}:rwx" {{ vm.data_disk_mount }}/{{ smb.share }}
+  - ufw allow samba
+  - systemctl restart smbd
   - systemctl enable qemu-guest-agent
   - systemctl start qemu-guest-agent
 
@@ -78,6 +79,7 @@ runcmd:
 package_upgrade: true
 packages:
   - apt-transport-https
+  - acl
   - ca-certificates
   - curl
   - gpg

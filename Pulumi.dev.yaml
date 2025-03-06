@@ -20,4 +20,4 @@ config:
       share: smb-k8s
       username: smb-user
       password:
-        secure: AAABAGgQpKgog77NF/AYNAHxoyBiJjA4Y5tCA8psFwh8kjCi
+        secure: AAABALOm8easoSXk/roCYsQ3iZLlGYP5kQqiNZRzrnuEcwMe8KN/YC+CzQWu314AfJFT3Dn6rWU=
