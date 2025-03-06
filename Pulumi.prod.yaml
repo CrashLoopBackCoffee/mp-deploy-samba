@@ -6,29 +6,29 @@ config:
       api-token:
         envvar: PROXMOX_API_TOKEN__PVE_01__PULUMI
     vm:
-      name: samba-dev
-      vmid: 1003
+      name: samba
+      vmid: 101
       vlan-id: 10
-      ipv4-address: 10.0.10.2/24
+      ipv4-address: 10.0.10.3/24
       cores: 2
       memory_mb_min: 2048
       memory_mb_max: 4096
-      root_disk_size_gb: 4
+      root_disk_size_gb: 6
       data_disk_size_gb: 2
-      ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIThrWKIoEj20S3DosaiKBRUGA89qe1xz9hch2+VhSGd mpagel@k8s-dev
+      ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINkV2VImBNPnGv5kyC9ybGPhMipr0VhFe1n/Ks7Sm8k4 mpagel@k8s-prod
     smb:
       remote:
         username: smb-user
         password:
-          secure: AAABALOm8easoSXk/roCYsQ3iZLlGYP5kQqiNZRzrnuEcwMe8KN/YC+CzQWu314AfJFT3Dn6rWU=
+          secure: AAABAEpNJoBRqCE1dOhowB6P9t73xDDrbcY7WdJY33VDxzrc+F7I4UJPMTfZ5173Knas9JCD5UI9OOlFjaPbajow
       k8s:
         username: k8s
         password:
-          secure: AAABAAXzekXOX9259x/ScRg/8rg6u6hF0XNYje0b25wJvRhaZB0bzLl3OdQRXz96uBCoiH2qVebJBNomrhoaUrW0QY/qD26a11dA
+          secure: AAABAIx5nm7039PZJxjcv4JJPHmTzCb989LlLHYOwgep/UrFGEmRJ3qXVCypQMJ8cU1yGczX6fyZFp+G9m8zaaU3sWE=
       shares:
-        - name: write-all
+        - name: paperless-consume
           remote_write: true
           k8s_write: true
-        - name: write-k8s
+        - name: paperless-media
           remote_write: false
           k8s_write: true
