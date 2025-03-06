@@ -16,3 +16,10 @@ config:
       root_disk_size_gb: 10
       data_disk_size_gb: 2
       ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIThrWKIoEj20S3DosaiKBRUGA89qe1xz9hch2+VhSGd mpagel@k8s-dev
+    smb:
+      share: smb-k8s
+      username: smb-user
+      password:
+        secure: AAABAGgQpKgog77NF/AYNAHxoyBiJjA4Y5tCA8psFwh8kjCi
+      password-hash:
+        secure: AAABAOKDpi8gRnRwObAzyOOaCY4MJY2KmVLXne8zq3V+WdBtoT66IiwJ2HaS3HY1yo+T+DHLEwhQRm57UpFXDs3hH449dsLakpyWYLYsfj/NSo4z07rewN/yre8S8oUyAGUE1p1YfqtS0JhRfAEQ4wSzs30K3NK1XaCms6/keBxuqZwkhn8y+CtELH3u5NHwHS7VlAsx

@@ -42,14 +42,7 @@ def create_server(component_config: ComponentConfig, proxmox_provider: proxmoxve
         datastore_id='local',
         content_type='snippets',
         source_raw={
-            'data': cloud_config_template.render(
-                component_config.vm.model_dump()
-                | {
-                    'username': component_config.vm.ssh_user,
-                    'ssh_public_key': component_config.vm.ssh_public_key,
-                    'data_disk_mount': component_config.vm.data_disk_mount,
-                }
-            ),
+            'data': cloud_config_template.render(component_config.model_dump()),
             'file_name': f'cloud-config-{component_config.vm.name}.yaml',
         },
         opts=p.ResourceOptions.merge(
@@ -146,7 +139,7 @@ def create_server(component_config: ComponentConfig, proxmox_provider: proxmoxve
     # create DNS entries for master nodes:
     dns_provider = unify.UnifyDnsRecordProvider(
         base_url=str(component_config.unify.url),
-        api_token=os.environ['UNIFY_API_TOKEN__PULUMI'],  # noqa: F821
+        api_token=os.environ['UNIFY_API_TOKEN__PULUMI'],
         verify_ssl=component_config.unify.verify_ssl,
     )
 

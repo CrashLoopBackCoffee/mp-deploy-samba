@@ -62,7 +62,15 @@ class UnifyConfig(ConfigBaseModel):
     internal_domain: str = 'erx.box'
 
 
+class SmbConfig(ConfigBaseModel):
+    username: str
+    password: str
+    password_hash: str
+    share: str
+
+
 class ComponentConfig(ConfigBaseModel):
     proxmox: ProxmoxConfig
     vm: VirtualMachineConfig
     unify: UnifyConfig = pydantic.Field(default_factory=UnifyConfig)
+    smb: SmbConfig
