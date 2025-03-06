@@ -21,5 +21,3 @@ config:
       username: smb-user
       password:
         secure: AAABAGgQpKgog77NF/AYNAHxoyBiJjA4Y5tCA8psFwh8kjCi
-      password-hash:
-        secure: AAABAOKDpi8gRnRwObAzyOOaCY4MJY2KmVLXne8zq3V+WdBtoT66IiwJ2HaS3HY1yo+T+DHLEwhQRm57UpFXDs3hH449dsLakpyWYLYsfj/NSo4z07rewN/yre8S8oUyAGUE1p1YfqtS0JhRfAEQ4wSzs30K3NK1XaCms6/keBxuqZwkhn8y+CtELH3u5NHwHS7VlAsx

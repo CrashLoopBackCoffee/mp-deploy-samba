@@ -65,7 +65,6 @@ class UnifyConfig(ConfigBaseModel):
 class SmbConfig(ConfigBaseModel):
     username: str
     password: str
-    password_hash: str
     share: str
 
 

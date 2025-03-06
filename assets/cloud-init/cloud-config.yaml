@@ -12,6 +12,7 @@ users:
       - "{{ vm.ssh_public_key }}"
     lock_passwd: true
     sudo: ALL=(ALL) NOPASSWD:ALL
+  - name: "{{ smb.username }}"
 device_aliases:
   data: /dev/vdb
 disk_setup:
@@ -66,7 +67,6 @@ hostname: "{{ vm.name }}"
 # creates script at config time but runs it in final stage:
 runcmd:
   - mkdir -p {{ vm.data_disk_mount }}/{{ smb.share }}
-  - useradd -m -s /bin/false {{ smb.username }}
   - echo ----------------------------------------- service started
   - printf "{{ smb.password }}\n{{ smb.password }}\n" | smbpasswd -a -s {{ smb.username }}
   - echo ----------------------------------------- smb password changed
