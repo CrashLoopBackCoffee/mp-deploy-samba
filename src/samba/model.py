@@ -62,10 +62,21 @@ class UnifyConfig(ConfigBaseModel):
     internal_domain: str = 'erx.box'
 
 
-class SmbConfig(ConfigBaseModel):
+class SmbShare(ConfigBaseModel):
+    name: str
+    remote_write: bool
+    k8s_write: bool
+
+
+class SmbAccount(ConfigBaseModel):
     username: str
     password: str
-    share: str
+
+
+class SmbConfig(ConfigBaseModel):
+    remote: SmbAccount
+    k8s: SmbAccount
+    shares: list[SmbShare]
 
 
 class ComponentConfig(ConfigBaseModel):

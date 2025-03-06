@@ -10,7 +10,8 @@ users:
       - "{{ vm.ssh_public_key }}"
     lock_passwd: true
     sudo: ALL=(ALL) NOPASSWD:ALL
-  - name: "{{ smb.username }}"
+  - name: "{{ smb.remote.username }}"
+  - name: "{{ smb.k8s.username }}"
 device_aliases:
   data: /dev/vdb
 disk_setup:
@@ -49,15 +50,17 @@ write_files:
 
       map to guest = bad user
       usershare allow guests = yes
+{% for share in smb.shares %}
 
-      [{{ smb.share }}]
-      comment = Kubernetes Share
-      path = {{ vm.data_disk_mount }}/{{ smb.share }}
-      read only = no
-      writable = yes
+      [{{ share.name }}]
+      comment = Kubernetes Share {{ share.name }}
+      path = {{ vm.data_disk_mount }}/{{ share.name }}
+      read only = yes
+      write list = {% if share.k8s_write %}{{ smb.k8s.username }} {% endif %}{% if share.remote_write %}{{ smb.remote.username }}{% endif %}
       browseable = yes
       guest ok = no
-      valid users = @{{ smb.username }}
+      valid users = @{{ smb.remote.username }} @{{ smb.k8s.username }}
+{% endfor %}
 package_upgrade: true
 packages:
   - apt-transport-https
@@ -70,9 +73,13 @@ packages:
   - samba
   - qemu-guest-agent
 runcmd:
-  - mkdir -p {{ vm.data_disk_mount }}/{{ smb.share }}
-  - printf "{{ smb.password }}\n{{ smb.password }}\n" | smbpasswd -a -s {{ smb.username }}
-  - setfacl -R -m "u:{{ smb.username }}:rwx" {{ vm.data_disk_mount }}/{{ smb.share }}
+  - printf "{{ smb.remote.password }}\n{{ smb.remote.password }}\n" | smbpasswd -a -s {{ smb.remote.username }}
+  - printf "{{ smb.k8s.password }}\n{{ smb.k8s.password }}\n" | smbpasswd -a -s {{ smb.k8s.username }}
+{% for share in smb.shares %}
+  - mkdir -p {{ vm.data_disk_mount }}/{{ share.name }}
+  - setfacl -R -m "u:{{ smb.remote.username }}:rwx" {{ vm.data_disk_mount }}/{{ share.name }}
+  - setfacl -R -m "u:{{ smb.k8s.username }}:rwx" {{ vm.data_disk_mount }}/{{ share.name }}
+{% endfor %}
   - ufw allow samba
   - systemctl restart smbd
   - systemctl enable qemu-guest-agent
