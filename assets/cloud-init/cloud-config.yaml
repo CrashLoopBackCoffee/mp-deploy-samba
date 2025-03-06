@@ -67,8 +67,6 @@ hostname: "{{ vm.name }}"
 runcmd:
   - mkdir -p {{ vm.data_disk_mount }}/{{ smb.share }}
   - useradd -m -s /bin/false {{ smb.username }}
-  - echo ----------------------------------------- BEFORE
-  - systemctl enable smbd --now
   - echo ----------------------------------------- service started
   - printf "{{ smb.password }}\n{{ smb.password }}\n" | smbpasswd -a -s {{ smb.username }}
   - echo ----------------------------------------- smb password changed
