@@ -14,7 +14,7 @@ config:
       memory_mb_min: 2048
       memory_mb_max: 4096
       root_disk_size_gb: 6
-      data_disk_size_gb: 2
+      data_disk_size_gb: 16
       ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINkV2VImBNPnGv5kyC9ybGPhMipr0VhFe1n/Ks7Sm8k4 mpagel@k8s-prod
     smb:
       remote:
