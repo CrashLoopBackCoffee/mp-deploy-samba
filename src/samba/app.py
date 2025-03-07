@@ -135,7 +135,7 @@ def create_server(component_config: ComponentConfig, proxmox_provider: proxmoxve
         operating_system={'type': 'l26'},
         opts=p.ResourceOptions.merge(
             proxmox_opts,
-            p.ResourceOptions(ignore_changes=['cdrom']),
+            p.ResourceOptions(ignore_changes=['cdrom'], protect=stack_name == 'prod'),
         ),
     )
 
