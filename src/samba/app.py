@@ -53,9 +53,9 @@ def create_server(component_config: ComponentConfig, proxmox_provider: proxmoxve
 
     p.export('smb-shares', (share.name for share in component_config.smb.shares))
     p.export('smb-remote-username', component_config.smb.remote.username)
-    p.export('smb-remote-password', component_config.smb.remote.password)
+    p.export('smb-remote-password', p.Output.secret(component_config.smb.remote.password))
     p.export('smb-k8s-username', component_config.smb.k8s.username)
-    p.export('smb-k8s-password', component_config.smb.k8s.password)
+    p.export('smb-k8s-password', p.Output.secret(component_config.smb.k8s.password))
 
     gateway_address = str(component_config.vm.ipv4_address.network.network_address + 1)
 
