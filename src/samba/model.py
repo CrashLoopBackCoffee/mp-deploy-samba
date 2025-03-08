@@ -76,6 +76,7 @@ class SmbAccount(ConfigBaseModel):
 class SmbConfig(ConfigBaseModel):
     remote: SmbAccount
     k8s: SmbAccount
+    group: str = 'smb-users'
     shares: list[SmbShare]
 
 
