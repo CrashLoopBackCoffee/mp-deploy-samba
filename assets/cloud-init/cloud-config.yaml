@@ -1,5 +1,7 @@
 #cloud-config
 hostname: "{{ vm.name }}"
+groups:
+  - "{{ smb.group }}"
 users:
   - default
   - name: "{{ vm.ssh_user }}"
@@ -11,7 +13,11 @@ users:
     lock_passwd: true
     sudo: ALL=(ALL) NOPASSWD:ALL
   - name: "{{ smb.remote.username }}"
+    groups:
+      - "{{ smb.group }}"
   - name: "{{ smb.k8s.username }}"
+    groups:
+      - "{{ smb.group }}"
 device_aliases:
   data: /dev/vdb
 disk_setup:
@@ -60,11 +66,16 @@ write_files:
       browseable = yes
       guest ok = no
       valid users = @{{ smb.remote.username }} @{{ smb.k8s.username }}
+      force group = "{{ smb.group }}"
+
+      # change default masks to allow g+rx for files and groups, remove executable bit from files:
+      create mask = 0664
+      directory mask = 0775
+
 {% endfor %}
 package_upgrade: true
 packages:
   - apt-transport-https
-  - acl
   - ca-certificates
   - curl
   - gpg
@@ -77,8 +88,8 @@ runcmd:
   - printf "{{ smb.k8s.password }}\n{{ smb.k8s.password }}\n" | smbpasswd -a -s {{ smb.k8s.username }}
 {% for share in smb.shares %}
   - mkdir -p {{ vm.data_disk_mount }}/{{ share.name }}
-  - setfacl -R -m "u:{{ smb.remote.username }}:rwx" {{ vm.data_disk_mount }}/{{ share.name }}
-  - setfacl -R -m "u:{{ smb.k8s.username }}:rwx" {{ vm.data_disk_mount }}/{{ share.name }}
+  - chown -R {{ smb.k8s.username }}:{{ smb.group }} {{ vm.data_disk_mount }}/{{ share.name }}
+  - chmod -R 2775 {{ vm.data_disk_mount }}/{{ share.name }}
 {% endfor %}
   - ufw allow samba
   - systemctl restart smbd
